@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.http import HttpResponse
