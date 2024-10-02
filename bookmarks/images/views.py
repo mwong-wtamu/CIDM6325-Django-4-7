@@ -9,6 +9,16 @@ from django.http import HttpResponse
 from .forms import ImageCreateForm
 from .models import Image
 
+from actions.utils import create_action
+
+import redis
+from django.conf import settings
+
+# connect to redis
+r = redis.Redis(
+    host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB
+)
+
 
 @login_required
 def image_create(request):
@@ -22,20 +32,31 @@ def image_create(request):
             # assign current user to the item
             new_image.user = request.user
             new_image.save()
+            create_action(request.user, "bookmarked image", new_image)
             messages.success(request, "Image added successfully")
             # redirect to new created item detail view
             return redirect(new_image.get_absolute_url())
     else:
         # build form with data provided by the bookmarklet via GET
         form = ImageCreateForm(data=request.GET)
-    # return render(request, "images/image/create.html", {"section": "images", "form": form})
+    # return render(request, "images/image/create.html", {"section": "images", "form": form}) #original-code
     return render(request, "image/create.html", {"section": "images", "form": form})
 
 
 def image_detail(request, id, slug):
     image = get_object_or_404(Image, id=id, slug=slug)
-    # return render(request, "images/image/detail.html", {"section": "images", "image": image})
+    # return render(request, "images/image/detail.html", {"section": "images", "image": image}) #original-code
+
     return render(request, "image/detail.html", {"section": "images", "image": image})
+
+    # increment total image views by 1
+    # for redis
+    # total_views = r.incr(f"image:{image.id}:views")
+    # return render(
+    #     request,
+    #     "image/detail.html",
+    #     {"section": "images", "image": image, "total_views": total_views},
+    # )
 
 
 @login_required
@@ -48,6 +69,7 @@ def image_like(request):
             image = Image.objects.get(id=image_id)
             if action == "like":
                 image.users_like.add(request.user)
+                create_action(request.user, "likes", image)
             else:
                 image.users_like.remove(request.user)
             return JsonResponse({"status": "ok"})
