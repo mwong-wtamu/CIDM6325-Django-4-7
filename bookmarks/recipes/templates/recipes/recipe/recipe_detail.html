@@ -1,0 +1,65 @@
+{% extends "recipes/base.html" %}
+{% block title %}{{ recipe.title }}{% endblock %}
+{% block content %}
+    <h1>{{ recipe.title }}</h1>
+    <p class="date">
+        Published {{ recipe.publish }} by {{ recipe.author }}
+    </p>
+ 
+    <h2>Ingredients: </h2>
+    <p>
+        <ul>
+        {% for ingredient in recipe.ingredients.splitlines %}
+            <li>{{ ingredient }}</li>
+        {% endfor %}
+        </ul>
+    </p>
+    <p>
+        Preparation Time: {{ recipe.prep_time }} minutes
+    </p>
+    <p>
+        Cooking Time: {{ recipe.cook_time }} minutes
+    </p>
+    <p>
+        Average Rating: {{ recipe.average_rating|default_if_none:"Not Rated" }} / 5
+    </p>
+    <div>
+    {% include "recipes/recipe/includes/rate_recipe_form.html" %}
+    </div>
+    <div style="clear:both"></div>
+    <h2>Instructions:</h2>
+    {{ recipe.body|linebreaks }}
+
+    <p>
+        <a href="{% url "recipes:post_share" recipe.id %}">
+          Share this recipe
+        </a>
+    </p>
+
+    <h2>Similar recipes</h2>
+    {% for similar_recipe in similar_recipes %}
+      <p>
+        <a href="{{ similar_recipe.get_absolute_url }}">{{ similar_recipe.title }}</a>
+      </p>
+    {% empty %}
+      There are no similar recipes yet.
+    {% endfor %}
+
+    {% with comments.count as total_comments %}
+        <h2>
+        {{ total_comments }} comment{{ total_comments|pluralize }}
+        </h2>
+    {% endwith %}
+    {% for comment in comments %}
+        <div class="comment">
+            <p class="info">
+            RecipeComment {{ forloop.counter }} by {{ comment.name }}
+            {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks }}
+        </div>
+    {% empty %}
+    <p>There are no comments.</p>
+    {% endfor %}
+    {% include "recipes/recipe/includes/comment_form.html" %}
+{% endblock %}

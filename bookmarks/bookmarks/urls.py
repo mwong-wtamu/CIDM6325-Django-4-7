@@ -28,7 +28,7 @@ urlpatterns = [
     path("images/", include("images.urls", namespace="images")),
     path("__debug__/", include("debug_toolbar.urls")),
     path("blog/", include("blog.urls", namespace="blog")),
-    # path('recipes/', include('recipes.urls', namespace='recipes'))
+    path("recipes/", include("recipes.urls", namespace="recipes")),
 ]
 
 if settings.DEBUG:

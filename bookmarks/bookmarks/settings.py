@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "taggit",
     "blog.apps.BlogConfig",  # For Blog App
+    "recipes.apps.RecipesConfig",  # For Recipe App
 ]
 
 MIDDLEWARE = [
