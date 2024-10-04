@@ -19,6 +19,12 @@
       <li {% if section == "people" %}class="selected"{% endif %}>
         <a href="{% url "user_list" %}">People</a>
       </li>
+      <li {% if section == "blog" %}class="selected"{% endif %}>
+        <a href="{% url "blog:post_list" %}">Blog</a>
+      </li>
+      <li {% if section == "recipes" %}class="selected"{% endif %}>
+        <a href="{% url "recipes:recipe_list" %}">Recipes</a>
+      </li>
     </ul>
   {% endif %}
   <span class="user">
