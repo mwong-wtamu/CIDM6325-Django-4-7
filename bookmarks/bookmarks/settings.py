@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "easy_thumbnails",
     "actions.apps.ActionsConfig",
     "debug_toolbar",
+    "taggit",
+    "blog.apps.BlogConfig",  # For Blog App
 ]
 
 MIDDLEWARE = [
