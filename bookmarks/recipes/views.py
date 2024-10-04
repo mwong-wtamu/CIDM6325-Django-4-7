@@ -194,10 +194,8 @@ def recipe_detail(request, year, month, day, recipe):
     )
     # List of active comments for this recipe
     comments = recipe.recipe_comments.filter(active=True)
+
     form = RecipeCommentForm()  # Create an empty form to render on the page
-    # Form for users to comment on recipe
-    rating_form = RatingForm()
-    average_rating = recipe.average_rating
     # List of similar recipes
     recipe_tags_ids = recipe.tags.values_list("id", flat=True)
     similar_recipes = Recipe.published.filter(tags__in=recipe_tags_ids).exclude(
@@ -206,6 +204,10 @@ def recipe_detail(request, year, month, day, recipe):
     similar_recipes = similar_recipes.annotate(same_tags=Count("tags")).order_by(
         "-same_tags", "-publish"
     )[:4]
+
+    # Form for users to comment on recipe
+    rating_form = RatingForm()
+    average_rating = recipe.average_rating
 
     return render(
         request,

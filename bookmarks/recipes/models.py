@@ -111,11 +111,18 @@ class Recipe(models.Model):
     def __str__(self):
         return f"{self.title} - {self.average_rating:.2f}"
 
+    # Connected to recipe_list.html (recipe.get_absolute_url)
     def get_absolute_url(self):
         return reverse(
             "recipes:recipe_detail",
             args=[self.publish.year, self.publish.month, self.publish.day, self.slug],
         )
+
+    # def get_absolute_url(self):
+    #     return reverse(
+    #         "recipes:recipe_detail",
+    #         args=[self.id],
+    #     )
 
     # The reverse() function will build the URL dynamically using the URL name defined in the URL patterns.
 

@@ -7,7 +7,7 @@
     {% endif %}
     {% for recipe in recipes %}
         <h2>
-        <a href="{{ recipes.get_absolute_url }}">
+        <a href="{{ recipe.get_absolute_url }}">
             {{ recipe.title }}
         </a>
         </h2>
