@@ -99,9 +99,17 @@ class Recipe(models.Model):
     cook_time = models.IntegerField(help_text="Cooking time in minutes")
     # average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
+    # Many-to-Many relationship for likes (users who liked the recipe)
+    users_like = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="recipes_liked", blank=True
+    )
+    total_likes = models.PositiveIntegerField(default=0)
+
     images = models.ManyToManyField(
         Image, related_name="recipes", blank=True
     )  # Many-to-many relationship - image.recipes.all() or recipes.images.all()
+
+    tags = TaggableManager()
 
     class Meta:
         ordering = ["-publish"]
@@ -131,7 +139,8 @@ class Recipe(models.Model):
 
     # The reverse() function will build the URL dynamically using the URL name defined in the URL patterns.
 
-    tags = TaggableManager()
+    # def total_likes_count(self):
+    #     return self.users_like.count()
 
 
 class Rating(models.Model):

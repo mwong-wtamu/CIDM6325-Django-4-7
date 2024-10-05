@@ -7,7 +7,7 @@
     {% endif %}
     {% for recipe in recipes %}
     <div class="recipe-entry">
-        <div class="recipe-image">
+        <div class="recipe-list">
             {% if recipe.images.all %}
                 <!-- Display the first image associated with the recipe -->
                 <a href="{{ recipe.get_absolute_url }}">

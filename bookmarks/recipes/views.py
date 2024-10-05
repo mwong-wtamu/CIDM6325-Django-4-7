@@ -1,5 +1,8 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, render
+from django.http import JsonResponse
+from django.http import HttpResponse
 from django.http import Http404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
@@ -14,12 +17,11 @@ from django.contrib.postgres.search import (
 from taggit.models import Tag
 
 # from .models import Post
-
 from .models import Recipe, Rating
 
 # from .forms import CommentForm, EmailPostForm, SearchForm
-
 from .forms import RecipeCommentForm, RatingForm, EmailPostForm
+from actions.utils import create_action
 
 # Create your views here.
 
@@ -303,3 +305,22 @@ def recipe_share(request, recipe_id):
         "recipes/recipe/recipe_share.html",
         {"recipe": recipe, "form": form, "sent": sent},
     )
+
+
+@login_required
+@require_POST
+def recipe_like(request):
+    recipe_id = request.POST.get("id")
+    action = request.POST.get("action")
+    if recipe_id and action:
+        try:
+            recipe = Recipe.objects.get(id=recipe_id)
+            if action == "like":
+                recipe.users_like.add(request.user)
+                create_action(request.user, "likes", recipe)
+            else:
+                recipe.users_like.remove(request.user)
+            return JsonResponse({"status": "ok"})
+        except Recipe.DoesNotExist:
+            pass
+    return JsonResponse({"status": "error"})
