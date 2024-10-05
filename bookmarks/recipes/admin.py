@@ -36,6 +36,9 @@ class RecipeAdmin(admin.ModelAdmin):
     raw_id_fields = ["author"]
     date_hierarchy = "publish"
     ordering = ["publish"]
+    filter_horizontal = (
+        "images",
+    )  # Enables a horizontal filter for images in the admin
 
     def get_average_rating(self, obj):
         return obj.average_rating

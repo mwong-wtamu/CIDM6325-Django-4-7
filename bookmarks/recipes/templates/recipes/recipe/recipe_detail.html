@@ -1,4 +1,5 @@
 {% extends "recipes/base.html" %}
+
 {% block title %}{{ recipe.title }}{% endblock %}
 {% block content %}
     <h1>{{ recipe.title }}</h1>
@@ -6,6 +7,20 @@
         Published {{ recipe.publish }} by {{ recipe.author }}
     </p>
  
+   <!-- Images associated with the recipe -->
+   <div class="recipe-image">
+     {% for image in recipe.images.all %}
+         <div class="image">
+            <a href="{{ image.get_absolute_url }}">
+                <img src="{{ image.image.url }}" alt="{{ image.description }}">
+            </a>
+             <p>{{ image.description }}</p>
+         </div>
+     {% empty %}
+         <p>No images available for this recipe.</p>
+     {% endfor %}
+    </div>
+
     <h2>Ingredients: </h2>
     <p>
         <ul>
@@ -29,6 +44,7 @@
     <div style="clear:both"></div>
     <h2>Instructions:</h2>
     {{ recipe.body|linebreaks }}
+
 
     <p>
         <a href="{% url "recipes:recipe_share" recipe.id %}">

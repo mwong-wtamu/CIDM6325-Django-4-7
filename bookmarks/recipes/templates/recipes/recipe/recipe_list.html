@@ -6,31 +6,46 @@
         <h2>Recipes tagged with "{{ tag.name }}"</h2>
     {% endif %}
     {% for recipe in recipes %}
-        <h2>
-        <a href="{{ recipe.get_absolute_url }}">
-            {{ recipe.title }}
-        </a>
-        </h2>
-        <p class="tags">Tags: 
-            {% for tag in recipe.tags.all %}
-            <a href="{% url 'recipes:recipe_list_by_tag' tag.slug %}">
-              {{ tag.name }}
-            </a>{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </p>
-        <p class="date">
-            Published {{ recipe.publish }} by {{ recipe.author }}
-        </p>
-        <p>
-            Average Rating: {{ recipe.average_rating }} / 5
-        </p>
-        <p>
-            Ingredients: {{ recipe.ingredients|truncatewords:10|linebreaks }}
-        </p>
-        <p>
-            Preparation Time: {{ recipe.prep_time }} minutes
-        </p>
-        {{ recipe.content|truncatewords:30|linebreaks }}
+    <div class="recipe-entry">
+        <div class="recipe-image">
+            {% if recipe.images.all %}
+                <!-- Display the first image associated with the recipe -->
+                <a href="{{ recipe.get_absolute_url }}">
+                    <img src="{{ recipe.images.all.0.image.url }}" alt="{{ recipe.images.all.0.description }}">
+                </a>
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+
+        <div class="recipe-details">
+            <h2>
+            <a href="{{ recipe.get_absolute_url }}">
+                {{ recipe.title }}
+            </a>
+            </h2>
+            <p class="tags">Tags: 
+                {% for tag in recipe.tags.all %}
+                <a href="{% url 'recipes:recipe_list_by_tag' tag.slug %}">
+                {{ tag.name }}
+                </a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p class="date">
+                Published {{ recipe.publish }} by {{ recipe.author }}
+            </p>
+            <p>
+                Average Rating: {{ recipe.average_rating }} / 5
+            </p>
+            <p>
+                Ingredients: {{ recipe.ingredients|truncatewords:10|linebreaks }}
+            </p>
+            <p>
+                Preparation Time: {{ recipe.prep_time }} minutes
+            </p>
+            {{ recipe.content|truncatewords:30|linebreaks }}
+        </div>
+    </div>
     {% endfor %}
     {% include "pagination.html" with page=recipes %}
 {% endblock %}

@@ -1,0 +1,12 @@
+.recipe-image { overflow:hidden; }
+.recipe-image .image {
+    float:left;
+    width:300px;
+    height:400px;
+    margin:0 10px 10px 10px;
+    border-top:8px solid #12c064;
+    background:#eee;
+}
+.recipe-image img { width:300px; height:300px; }
+.recipe-image .info { padding:10px; }
+.recipe-image .info a { color:#333; }

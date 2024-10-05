@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Avg
 from taggit.managers import TaggableManager
+from images.models import Image
 
 
 # Create your models here.
@@ -97,6 +98,10 @@ class Recipe(models.Model):
     prep_time = models.IntegerField(help_text="Preparation time in minutes")
     cook_time = models.IntegerField(help_text="Cooking time in minutes")
     # average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+
+    images = models.ManyToManyField(
+        Image, related_name="recipes", blank=True
+    )  # Many-to-many relationship - image.recipes.all() or recipes.images.all()
 
     class Meta:
         ordering = ["-publish"]
