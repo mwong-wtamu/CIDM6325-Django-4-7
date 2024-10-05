@@ -53,7 +53,7 @@
     {% for comment in comments %}
         <div class="comment">
             <p class="info">
-            RecipeComment {{ forloop.counter }} by {{ comment.name }}
+            Recipe comment {{ forloop.counter }} by {{ comment.name }}
             {{ comment.created }}
             </p>
             {{ comment.body|linebreaks }}
