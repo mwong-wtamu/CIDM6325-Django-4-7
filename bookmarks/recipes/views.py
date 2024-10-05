@@ -23,6 +23,14 @@ from .models import Recipe, Rating
 from .forms import RecipeCommentForm, RatingForm, EmailPostForm
 from actions.utils import create_action
 
+import redis
+from django.conf import settings
+
+# connect to redis
+r = redis.Redis(
+    host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB
+)
+
 # Create your views here.
 
 
@@ -211,6 +219,10 @@ def recipe_detail(request, year, month, day, recipe):
     rating_form = RatingForm()
     average_rating = recipe.average_rating
 
+    # increment total image views by 1
+    # for redis
+    total_views = r.incr(f"recipe:{recipe.id}:views")
+
     return render(
         request,
         "recipes/recipe/recipe_detail.html",
@@ -221,6 +233,7 @@ def recipe_detail(request, year, month, day, recipe):
             "rating_form": rating_form,
             "average_rating": average_rating,
             "similar_recipes": similar_recipes,
+            "total_views": total_views,
         },
     )
 
